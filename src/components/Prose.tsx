@@ -1,13 +1,15 @@
-import clsx from 'clsx'
+import { cLo, TClassName, } from '@/util/util';
+import { DebugText } from '@/util/util-react';
 
-import { DebugText } from '@/util/util';
-
-export function Prose({ as: Component = 'div', className, ...props }) {
+export function Prose({ as: Component = 'div', className, ...props }: {
+  Component: React.ElementType;
+  className?: TClassName;
+}) {
   return (
     <div>
       <DebugText>Prose.jsx</DebugText>
       <Component
-        className={clsx(
+        {...cLo(
           className,
           'prose prose-slate max-w-none dark:prose-invert dark:text-slate-400',
           // headings

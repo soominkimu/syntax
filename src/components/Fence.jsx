@@ -10,7 +10,7 @@ export function Fence({ children, language }) {
       theme={undefined}
     >
       {({ className, style, tokens, getTokenProps }) => (
-        <pre className={className} style={style}>
+        <pre {...{className, style}}>
           <code>
             {tokens.map((line, index) => (
               <Fragment key={index}>

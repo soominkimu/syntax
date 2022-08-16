@@ -34,6 +34,19 @@ Sit commodi iste iure molestias qui amet voluptatem sed quaerat. Nostrum aut par
 
 Voluptas beatae omnis omnis voluptas. Cum architecto ab sit ad eaque quas quia distinctio. Molestiae aperiam qui quis deleniti soluta quia qui. Dolores nostrum blanditiis libero optio id. Mollitia ad et asperiores quas saepe alias.
 
+```ts
+// to look up a specific property on another type:
+type Person = { age: number; name: string; alive: boolean; };
+type Age = Person["age"];  // type Age = number
+const MyArray = [
+  { name: "Alice", age: 15 },
+  { name: "Bob", age: 23 },
+  { name: "Eve", age: 38 },
+];
+type Person = typeof MyArray[number];  // use number to get the type of an array's elements
+type Age    = typeof MyArray[number]["age"]; ```
+```
+
 ---
 
 ## Quos porro ut molestiae

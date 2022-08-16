@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import clsx from 'clsx'
 
 import { Hero } from '@/components/Hero'
 import { Logo } from '@/components/Logo'
@@ -11,35 +10,31 @@ import { Prose } from '@/components/Prose'
 import { Search } from '@/components/Search'
 import { ThemeSelector } from '@/components/ThemeSelector'
 
-import { DebugText } from '@/util/util';
+import { cCo, cC0o, } from '@/util/util';
+import { DebugText } from '@/util/util-react';
 
 function Header({ navigation }) {
-  let [isScrolled, setIsScrolled] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     function onScroll() {
-      setIsScrolled(window.scrollY > 0)
+      setIsScrolled(window.scrollY > 0);
     }
-    onScroll()
-    window.addEventListener('scroll', onScroll)
+    onScroll();
+    window.addEventListener('scroll', onScroll);
     return () => {
-      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('scroll', onScroll);
     }
-  }, [])
+  }, []);
 
   return (
     <header
-      className={clsx(
-        'sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 transition duration-500 dark:shadow-none sm:px-6 lg:px-8',
-        {
-          'dark:bg-slate-900/95 dark:backdrop-blur dark:[@supports(backdrop-filter:blur(0))]:bg-slate-900/75':
-            isScrolled,
-          'dark:bg-transparent': !isScrolled,
-        }
-      )}
+      {...cCo('sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 transition duration-500 dark:shadow-none sm:px-6 lg:px-8',
+        isScrolled, 'dark:bg-slate-900/95 dark:backdrop-blur dark:[@supports(backdrop-filter:blur(0))]:bg-slate-900/75',
+        'dark:bg-transparent')}
     >
       <div className="mr-6 lg:hidden">
-        <MobileNavigation navigation={navigation} />
+        <MobileNavigation {...{navigation}} />
       </div>
       <div className="relative flex items-center flex-grow basis-0">
         <Link href="/">
@@ -69,34 +64,39 @@ function Header({ navigation }) {
         </Link>
       </div>
     </header>
-  )
+  );
 }
 
-export function Layout({ children, title, navigation, tableOfContents }) {
-  let router = useRouter()
-  let isHomePage = router.pathname === '/'
-  let allLinks = navigation.flatMap((section) => section.links)
-  let linkIndex = allLinks.findIndex((link) => link.href === router.pathname)
-  let previousPage = allLinks[linkIndex - 1]
-  let nextPage = allLinks[linkIndex + 1]
-  let section = navigation.find((section) =>
+export function Layout({ children, title, navigation, tableOfContents }: {
+  children:        React.ReactNode;
+  title:           string;
+  navigation:      INavigationEl[];
+  tableOfContents: ITableOfContentsEl[];
+}) {
+  const router = useRouter();
+  const isHomePage = router.pathname === '/';
+  const allLinks = navigation.flatMap((section) => section.links);
+  const linkIndex = allLinks.findIndex((link) => link.href === router.pathname);
+  const previousPage = allLinks[linkIndex - 1];
+  const nextPage = allLinks[linkIndex + 1];
+  const section = navigation.find((section) =>
     section.links.find((link) => link.href === router.pathname)
-  )
-  let currentSection = useTableOfContents(tableOfContents)
+  );
+  const currentSection = useTableOfContents(tableOfContents);
 
-  function isActive(section) {
+  function isActive(section: ITableOfContentsEl) {
     if (section.id === currentSection) {
-      return true
+      return true;
     }
     if (!section.children) {
-      return false
+      return false;
     }
-    return section.children.findIndex(isActive) > -1
+    return section.children.findIndex(isActive) > -1;
   }
 
   return (
     <>
-      <Header navigation={navigation} />
+      <Header {...{navigation}} />
 
       {isHomePage && <Hero />}
 
@@ -108,7 +108,7 @@ export function Layout({ children, title, navigation, tableOfContents }) {
             <div className="absolute bottom-0 right-0 hidden w-px h-12 top-16 bg-gradient-to-t from-slate-800 dark:block" />
             <div className="absolute bottom-0 right-0 hidden w-px top-28 bg-slate-800 dark:block" />
             <Navigation
-              navigation={navigation}
+              {...{navigation}}
               className="w-64 pr-8 xl:w-72 xl:pr-16"
             />
           </div>
@@ -178,11 +178,8 @@ export function Layout({ children, title, navigation, tableOfContents }) {
                       <h3>
                         <Link href={`#${section.id}`}>
                           <a
-                            className={clsx(
-                              isActive(section)
-                                ? 'text-sky-500'
-                                : 'font-normal text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'
-                            )}
+                            {...cC0o(isActive(section), 'text-sky-500',
+                              'font-normal text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300')}
                           >
                             {section.title}
                           </a>
@@ -194,11 +191,8 @@ export function Layout({ children, title, navigation, tableOfContents }) {
                             <li key={subSection.id}>
                               <Link href={`#${subSection.id}`}>
                                 <a
-                                  className={
-                                    isActive(subSection)
-                                      ? 'text-sky-500'
-                                      : 'hover:text-slate-600 dark:hover:text-slate-300'
-                                  }
+                                  {...cC0o(isActive(subSection), 'text-sky-500',
+                                    'hover:text-slate-600 dark:hover:text-slate-300')}
                                 >
                                   {subSection.title}
                                 </a>
@@ -219,61 +213,59 @@ export function Layout({ children, title, navigation, tableOfContents }) {
   )
 }
 
-function useTableOfContents(tableOfContents) {
-  let [currentSection, setCurrentSection] = useState(tableOfContents[0]?.id)
+function useTableOfContents(tableOfContents: ITableOfContentsEl[]) {
+  const [currentSection, setCurrentSection] = useState(tableOfContents[0]?.id);
 
-  let getHeadings = useCallback(() => {
+  const getHeadings = useCallback(() => {
     function* traverse(node) {
       if (Array.isArray(node)) {
-        for (let child of node) {
-          yield* traverse(child)
+        for (const child of node) {
+          yield* traverse(child);
         }
       } else {
-        let el = document.getElementById(node.id)
-        if (!el) return
+        const el = document.getElementById(node.id);
+        if (!el) return;
 
-        let style = window.getComputedStyle(el)
-        let scrollMt = parseFloat(style.scrollMarginTop)
+        const style = window.getComputedStyle(el);
+        const scrollMt = parseFloat(style.scrollMarginTop);
 
-        let top = window.scrollY + el.getBoundingClientRect().top - scrollMt
-        yield { id: node.id, top }
+        const top = window.scrollY + el.getBoundingClientRect().top - scrollMt;
+        yield { id: node.id, top };
 
-        for (let child of node.children ?? []) {
-          yield* traverse(child)
+        for (const child of node.children ?? []) {
+          yield* traverse(child);
         }
       }
     }
 
-    return Array.from(traverse(tableOfContents))
-  }, [tableOfContents])
+    return Array.from(traverse(tableOfContents));
+  }, [tableOfContents]);
 
   useEffect(() => {
-    let headings = getHeadings()
-    if (tableOfContents.length === 0 || headings.length === 0) return
+    const headings = getHeadings();
+    if (tableOfContents.length === 0 || headings.length === 0) return;
     function onScroll() {
-      let sortedHeadings = headings.concat([]).sort((a, b) => a.top - b.top)
+      const sortedHeadings = headings.concat([]).sort((a, b) => a.top - b.top);
 
-      let top = window.pageYOffset
-      let current = sortedHeadings[0].id
+      const top = window.pageYOffset;
+      let current = sortedHeadings[0].id;
       for (let i = 0; i < sortedHeadings.length; i++) {
         if (top >= sortedHeadings[i].top) {
-          current = sortedHeadings[i].id
+          current = sortedHeadings[i].id;
         }
       }
-      setCurrentSection(current)
+      setCurrentSection(current);
     }
-    window.addEventListener('scroll', onScroll, {
+    const eventOption = {
       capture: true,
       passive: true,
-    })
-    onScroll()
+    };
+    window.addEventListener('scroll', onScroll, eventOption);
+    onScroll();
     return () => {
-      window.removeEventListener('scroll', onScroll, {
-        capture: true,
-        passive: true,
-      })
+      window.removeEventListener('scroll', onScroll, eventOption);
     }
-  }, [getHeadings, tableOfContents])
+  }, [getHeadings, tableOfContents]);
 
-  return currentSection
+  return currentSection;
 }

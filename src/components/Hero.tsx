@@ -1,6 +1,5 @@
 import { Fragment } from 'react'
 import Image from 'next/image'
-import clsx from 'clsx'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 
 import { ButtonLink } from '@/components/Button'
@@ -8,10 +7,11 @@ import { HeroBackground } from '@/components/HeroBackground'
 import blurCyanImage from '@/images/blur-cyan.png'
 import blurIndigoImage from '@/images/blur-indigo.png'
 
-import { DebugText } from '@/util/util';
+import { cLo, cCo, } from '@/util/util';
+import { DebugText } from '@/util/util-react';
 
 const codeLanguage = 'javascript'
-const code = `export default {
+const codeSample = `export default {
   strategy: 'predictive',
   engine: {
     cpus: 12,
@@ -21,7 +21,7 @@ const code = `export default {
 
 const tabs = [
   { name: 'cache-advance.config.js', isActive: true },
-  { name: 'package.json', isActive: false },
+  { name: 'package.json',            isActive: false },
 ]
 
 export function Hero() {
@@ -104,17 +104,13 @@ export function Hero() {
                     {tabs.map((tab) => (
                       <div
                         key={tab.name}
-                        className={clsx('flex h-6 rounded-full', {
-                          'bg-gradient-to-r from-sky-400/30 via-sky-400 to-sky-400/30 p-px font-medium text-sky-300':
-                            tab.isActive,
-                          'text-slate-500': !tab.isActive,
-                        })}
+                        {...cCo('flex h-6 rounded-full',
+                          tab.isActive, 'bg-gradient-to-r from-sky-400/30 via-sky-400 to-sky-400/30 p-px font-medium text-sky-300',
+                          'text-slate-500')}
                       >
                         <div
-                          className={clsx(
-                            'flex items-center rounded-full px-2.5',
-                            { 'bg-slate-800': tab.isActive }
-                          )}
+                          {...cCo('flex items-center rounded-full px-2.5',
+                            tab.isActive, 'bg-slate-800')}
                         >
                           {tab.name}
                         </div>
@@ -127,7 +123,7 @@ export function Hero() {
                       className="pr-4 font-mono border-r select-none border-slate-300/5 text-slate-600"
                     >
                       {Array.from({
-                        length: code.split('\n').length,
+                        length: codeSample.split('\n').length,
                       }).map((_, index) => (
                         <Fragment key={index}>
                           {(index + 1).toString().padStart(2, '0')}
@@ -137,7 +133,7 @@ export function Hero() {
                     </div>
                     <Highlight
                       {...defaultProps}
-                      code={code}
+                      code={codeSample}
                       language={codeLanguage}
                       theme={undefined}
                     >
@@ -149,10 +145,7 @@ export function Hero() {
                         getTokenProps,
                       }) => (
                         <pre
-                          className={clsx(
-                            className,
-                            'flex overflow-x-auto pb-6'
-                          )}
+                          {...cLo(className, 'flex overflow-x-auto pb-6')}
                           style={style}
                         >
                           <code className="px-4">
