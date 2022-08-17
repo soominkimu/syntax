@@ -19,7 +19,7 @@ const codeSample = `export default {
   },
 }`
 
-const tabs = [
+const tabsSample = [
   { name: 'cache-advance.config.js', isActive: true },
   { name: 'package.json',            isActive: false },
 ]
@@ -52,9 +52,7 @@ export function Hero() {
               </p>
               <div className="flex mt-8 space-x-4 md:justify-center lg:justify-start">
                 <ButtonLink href="/">Get started</ButtonLink>
-                <ButtonLink href="/" variant="secondary">
-                  View on GitHub
-                </ButtonLink>
+                <ButtonLink href="/" variant="secondary">View on GitHub</ButtonLink>
               </div>
             </div>
           </div>
@@ -101,7 +99,7 @@ export function Hero() {
                     <circle cx="37" cy="5" r="4.5" />
                   </svg>
                   <div className="flex mt-4 text-xs space-x-2">
-                    {tabs.map((tab) => (
+                    {tabsSample.map((tab) => (
                       <div
                         key={tab.name}
                         {...cCo('flex h-6 rounded-full',
@@ -126,7 +124,7 @@ export function Hero() {
                         length: codeSample.split('\n').length,
                       }).map((_, index) => (
                         <Fragment key={index}>
-                          {(index + 1).toString().padStart(2, '0')}
+                          {(index + 1).toString().padStart(3, '0')}
                           <br />
                         </Fragment>
                       ))}
