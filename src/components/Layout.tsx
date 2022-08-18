@@ -48,7 +48,7 @@ function Header({ navigation }) {
         <Search />
       </div>
       <div className="relative flex justify-end basis-0 space-x-6 sm:space-x-8 md:flex-grow">
-        <DebugText>Layout.jsx/Header</DebugText>
+        <DebugText>Layout.tsx/Header</DebugText>
         <ThemeSelector className="relative z-10" />
         <Link href="https://github.com">
           <a className="group">
@@ -102,7 +102,7 @@ export function Layout({ children, title, navigation, tableOfContents }: {
 
       <div className="relative flex justify-center mx-auto max-w-8xl sm:px-2 lg:px-8 xl:px-12">
         <div className="hidden lg:relative lg:block lg:flex-none">
-          <DebugText>Layout.jsx</DebugText>
+          <DebugText>Layout.tsx</DebugText>
           <div className="absolute inset-y-0 right-0 w-[50vw] bg-slate-50 dark:hidden" />
           <div className="sticky top-[4.5rem] -ml-0.5 h-[calc(100vh-4.5rem)] overflow-y-auto py-16 pl-0.5">
             <div className="absolute bottom-0 right-0 hidden w-px h-12 top-16 bg-gradient-to-t from-slate-800 dark:block" />

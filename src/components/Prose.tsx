@@ -2,7 +2,7 @@ import { cLo, TClassName, } from '@/util/util';
 import { DebugText } from '@/util/util-react';
 
 export function Prose({ as: Component = 'div', className, ...props }: {
-  Component: React.ElementType;
+  Component:  React.ElementType;
   className?: TClassName;
 }) {
   return (
