@@ -45,11 +45,10 @@ export function Hero() {
             </div>
             <div className="relative">
               <p className="inline text-5xl tracking-tight text-transparent bg-gradient-to-r from-indigo-200 via-sky-400 to-indigo-200 bg-clip-text font-display">
-                Never miss the cache again.
+                Leading E-Commerce Technology
               </p>
               <p className="mt-3 text-2xl tracking-tight text-slate-400">
-                Cache every single thing your app could ever do ahead of time,
-                so your code never even has to run at all.
+                Bring cutting-edge solutions to the small and medium sized merchants.
               </p>
               <div className="flex mt-8 space-x-4 md:justify-center lg:justify-start">
                 <ButtonLink href="/">Get started</ButtonLink>

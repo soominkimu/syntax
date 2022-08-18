@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import { Hero } from '@/components/Hero'
-import { Logo } from '@/components/Logo'
+// import { Logo } from '@/components/Logo'
 import { MobileNavigation } from '@/components/MobileNavigation'
 import { Navigation } from '@/components/Navigation'
 import { Prose } from '@/components/Prose'
@@ -40,7 +40,10 @@ function Header({ navigation }) {
         <Link href="/">
           <a className="block w-10 overflow-hidden lg:w-auto">
             <span className="sr-only">Home page</span>
-            <Logo />
+            <p className='hidden font-extrabold lg:block'>
+              <span className="text-sm text-sky-500">Tech</span>
+              <span className="text-sky-800">Avenue</span>
+            </p>
           </a>
         </Link>
       </div>
