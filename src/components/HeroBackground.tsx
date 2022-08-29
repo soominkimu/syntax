@@ -1,7 +1,10 @@
-import { useId } from 'react'
+import { useId } from 'react';
 
-export function HeroBackground(props) {
-  let id = useId()
+export const HeroBackground: React.FC<PropsWithClassName<{}>> = ({
+  className,
+  ...props
+}) => {
+  const id = useId();
 
   return (
     <svg aria-hidden="true" width={668} height={1069} fill="none" {...props}>

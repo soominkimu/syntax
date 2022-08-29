@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import { cLo } from '@/util/util';
 
-const styles = {
+type StyleKeys = 'primary'|'secondary';
+const styles: { [K in StyleKeys]: string; } = {
   primary:
     'rounded-full bg-sky-300 py-2 px-4 text-sm font-semibold text-slate-900 hover:bg-sky-200 active:bg-sky-500 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300/50',
   secondary:
@@ -9,11 +10,11 @@ const styles = {
 }
 
 interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: keyof typeof styles;
+  variant?: StyleKeys;
 };
 
 interface ILinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
-  variant?: keyof typeof styles;
+  variant?: StyleKeys;
   href:     string;
 };
 
@@ -25,7 +26,7 @@ export function Button({ variant = 'primary', ...props }: IButtonProps) {
 export function ButtonLink({ variant = 'primary', href, ...props }: ILinkProps) {
   const { className, ...rest } = props;
   return (
-    <Link href={href}>
+    <Link {...{href}}>
       <a {...cLo(styles[variant], className)} {...rest} />
     </Link>
   )

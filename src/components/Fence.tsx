@@ -1,12 +1,18 @@
 import { Fragment } from 'react'
 import Highlight, { defaultProps } from 'prism-react-renderer'
+import type { Language } from 'prism-react-renderer'
 
-export function Fence({ children, language }) {
+export const Fence: React.FC<React.PropsWithChildren<{
+  language: Language;
+}>> = ({
+  children,
+  language
+}) => {
   return (
     <Highlight
       {...defaultProps}
-      code={children.trimEnd()}
-      language={language}
+      code={(children as string).trimEnd()}
+      {...{language}}
       theme={undefined}
     >
       {({ className, style, tokens, getTokenProps }) => (

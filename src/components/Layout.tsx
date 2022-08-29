@@ -245,10 +245,10 @@ function useTableOfContents(tableOfContents: ITableOfContentsEl[]) {
   }, [tableOfContents]);
 
   useEffect(() => {
-    const headings = getHeadings();
+    const headings = getHeadings() as { id: string; top: number; }[];
     if (tableOfContents.length === 0 || headings.length === 0) return;
     function onScroll() {
-      const sortedHeadings = headings.concat([]).sort((a, b) => a.top - b.top);
+      const sortedHeadings = headings!.concat([]).sort((a, b) => a.top - b.top);
 
       const top = window.pageYOffset;
       let current = sortedHeadings[0].id;

@@ -69,7 +69,7 @@ function getNodeText(node: any) {
 function collectHeadings(nodes: any, slugify = slugifyWithCounter()) {
   const sections = [];
 
-  for (let node of nodes) {
+  for (const node of nodes) {
     if (/^h[23]$/.test(node.name)) {
       const title = getNodeText(node);
       if (title) {
@@ -93,8 +93,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const title = pageProps.markdoc?.frontmatter.title;
 
   const pageTitle =
-    pageProps.markdoc?.frontmatter.pageTitle ||
-    `${pageProps.markdoc?.frontmatter.title} - Docs`;
+    pageProps.markdoc?.frontmatter.pageTitle || `${title} - Docs`;
 
   const description = pageProps.markdoc?.frontmatter.description;
 

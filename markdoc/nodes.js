@@ -1,4 +1,5 @@
-import { Fence } from '@/components/Fence'
+// @markdoc/markdoc/src/ast/node.ts
+import { Fence } from '@/components/Fence';
 
 const nodes = {
   document: {
@@ -23,4 +24,4 @@ const nodes = {
   },
 }
 
-export default nodes
+export default nodes;

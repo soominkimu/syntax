@@ -1,6 +1,10 @@
 import { DarkMode, Gradient, LightMode } from '@/components/Icon'
+import type { IconColors } from '@/components/Icon';
 
-export function ThemingIcon({ id, color }) {
+export function ThemingIcon({ id, color }: {
+  id:    string;
+  color: IconColors;
+}) {
   return (
     <>
       <defs>

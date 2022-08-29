@@ -1,5 +1,6 @@
-import { Callout } from '@/components/Callout'
-import { LinkGrid } from '@/components/LinkGrid'
+// @markdoc/markdoc/src/ast/node.ts
+import { Callout } from '@/components/Callout';
+import { LinkGrid } from '@/components/LinkGrid';
 
 const tags = {
   callout: {
@@ -17,8 +18,8 @@ const tags = {
   figure: {
     selfClosing: true,
     attributes: {
-      src: { type: String },
-      alt: { type: String },
+      src:     { type: String },
+      alt:     { type: String },
       caption: { type: String },
     },
     render: ({ src, alt = '', caption }) => (
@@ -36,12 +37,12 @@ const tags = {
     selfClosing: true,
     render: LinkGrid.Link,
     attributes: {
-      title: { type: String },
+      title:       { type: String },
       description: { type: String },
-      icon: { type: String },
-      href: { type: String },
+      icon:        { type: String },
+      href:        { type: String },
     },
   },
 }
 
-export default tags
+export default tags;

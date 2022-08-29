@@ -1,9 +1,10 @@
 import { cLo, TClassName, } from '@/util/util';
 import { DebugText } from '@/util/util-react';
 
-export function Prose({ as: Component = 'div', className, ...props }: {
-  Component:  React.ElementType;
+export function Prose({ as: Component = 'div', className, children }: {
+  as?: React.ElementType;
   className?: TClassName;
+  children:   React.ReactNode;
 }) {
   return (
     <div>
@@ -25,8 +26,9 @@ export function Prose({ as: Component = 'div', className, ...props }: {
           // hr
           'dark:prose-hr:border-slate-800'
         )}
-        {...props}
-      />
+      >
+        {children}
+      </Component>
     </div>
   )
 }
