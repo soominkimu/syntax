@@ -2,8 +2,9 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import { cLo, cCo, } from '@/util/util';
-import type { TClassName, } from '@/util/util';
 import { DebugText } from '@/util/util-react';
+
+import type { INavigationEl } from '@/models';
 
 export function Navigation({
   navigation,

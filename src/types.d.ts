@@ -1,3 +1,29 @@
+/*=============================================================================
+ types.d.ts - ambient types
+
+ d.ts files are treated as an ambient module declarations only if they don't have any imports.
+ If you provide an import line, it's now treated as a normal module file, not the global one,
+ so augmenting modules definitions doesn't work.
+ Also, you should not use 'export' in this file.
+
+ (C) 2022 SpacetimeQ INC.
+=============================================================================*/
+type Nullable<T>    = T | null;  // { [P in keyof T]: T[P] | null }  not a built-in
+type Undefinable<T> = T | undefined;
+type Maybe<T>       = T | null | undefined;
+type Ifable = Maybe<boolean | string | number | object>;  // any type reduceable to boolean
+
+type ValueOf<T> = T[keyof T];  // indexed type
+/**
+ * make Partial all properties EXCEPT K that must be necessary
+ */
+type PartialExcept<T, K extends keyof any> = Pick<T, K> & Partial< Omit<T, K> >;
+
+type string0       = Nullable<string>;
+type stringU       = Undefinable<string>;
+type string0U      = Undefinable< Nullable<string> >;
+type TSizeVariants = 'sm'|'md'|'lg';
+
 // ----------------------------------------------------------------------------
 // React class
 // ----------------------------------------------------------------------------
@@ -24,7 +50,6 @@ interface IClassX {
 };
 
 type PropsWithClassName<P> = P & IClassNameObj;
-type PropsWithClassNameChildren<P> = React.PropsWithChildren<P & IClassNameObj>;
 /**
  * react function with className object as a prop
  */
@@ -34,18 +59,24 @@ interface IFClassName<P = {}> {
 
 interface IEditable {
   editable?: boolean;
-}
-
-interface INavigationEl {  // element
-  title: string;
-  links: {
-    title: string;
-    href:  string;
-  }[];
 };
 
-interface ITableOfContentsEl {  // element
-  id:       string;
-  title:    string;
-  children: ITableOfContentsEl[];
-};
+// ----------------------------------------------------------------------------
+// JSON data
+// ----------------------------------------------------------------------------
+// declare module '*/paths.json' {
+//   interface IPathData {
+//     [K: string]: string;
+//   }
+//   const value: IPathData;
+//   export = value;
+// }
+
+// declare module '*/emojis.json' {
+//   interface IEmojis {
+//     [K: string]: string;
+//   }
+//   const value: IEmojis;
+//   export = value;
+// }
+;

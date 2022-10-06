@@ -1,6 +1,5 @@
 import { Icon } from '@/components/Icon'
-import { cLo } from '@/util/util';
-import {ReactPropTypes} from 'react';
+import { cl, } from '@/util/util';
 
 type StyleType = 'note'|'warning';
 type StyleAttributes = 'container'|'title'|'body';
@@ -30,13 +29,13 @@ export function Callout({ type = 'note', title, children }: {
   const IconComponent = icons[type];
 
   return (
-    <div {...cLo('my-8 flex rounded-3xl p-6', styles[type].container)}>
+    <div {...cl('my-8 flex rounded-3xl p-6', styles[type].container)}>
       <IconComponent className="flex-none w-8 h-8" />
       <div className="flex-auto ml-4">
-        <p {...cLo('m-0 font-display text-xl', styles[type].title)}>
+        <p {...cl('m-0 font-display text-xl', styles[type].title)}>
           {title}
         </p>
-        <div {...cLo('prose mt-2.5', styles[type].body)}>
+        <div {...cl('prose mt-2.5', styles[type].body)}>
           {children}
         </div>
       </div>

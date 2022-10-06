@@ -10,8 +10,18 @@ import { Prose } from '@/components/Prose'
 import { Search } from '@/components/Search'
 import { ThemeSelector } from '@/components/ThemeSelector'
 
-import { cCo, cC0o, } from '@/util/util';
+import type { Node } from '@markdoc/markdoc';
+import type { INavigationEl } from '@/models';
+
+import { cL, cc, c0, } from '@/util/util';
 import { DebugText } from '@/util/util-react';
+
+// interface ITableOfContentsEl extends Node { };
+interface ITableOfContentsEl {
+  id:       string;
+  title:    string;
+  children: ITableOfContentsEl[];
+};
 
 function Header({ navigation }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -29,9 +39,11 @@ function Header({ navigation }) {
 
   return (
     <header
-      {...cCo('sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 transition duration-500 dark:shadow-none sm:px-6 lg:px-8',
-        isScrolled, 'dark:bg-slate-900/95 dark:backdrop-blur dark:[@supports(backdrop-filter:blur(0))]:bg-slate-900/75',
-        'dark:bg-transparent')}
+      {...cc(cL('sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5',
+        'shadow-md shadow-slate-900/5 transition duration-500 dark:shadow-none sm:px-6 lg:px-8'),
+        isScrolled, cL('dark:bg-slate-900/95 dark:backdrop-blur',
+          'dark:[@supports(backdrop-filter:blur(0))]:bg-slate-900/75'),
+          'dark:bg-transparent')}
     >
       <div className="mr-6 lg:hidden">
         <MobileNavigation {...{navigation}} />
@@ -86,6 +98,7 @@ export function Layout({ children, title, navigation, tableOfContents }: {
     section.links.find((link) => link.href === router.pathname)
   );
   const currentSection = useTableOfContents(tableOfContents);
+  console.dir(tableOfContents);
 
   function isActive(section: ITableOfContentsEl) {
     if (section.id === currentSection) {
@@ -181,8 +194,9 @@ export function Layout({ children, title, navigation, tableOfContents }: {
                       <h3>
                         <Link href={`#${section.id}`}>
                           <a
-                            {...cC0o(isActive(section), 'text-sky-500',
-                              'font-normal text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300')}
+                            {...c0(isActive(section), 'text-sky-500',
+                              cL('font-normal text-slate-500 hover:text-slate-700',
+                              'dark:text-slate-400 dark:hover:text-slate-300'))}
                           >
                             {section.title}
                           </a>
@@ -194,21 +208,17 @@ export function Layout({ children, title, navigation, tableOfContents }: {
                             <li key={subSection.id}>
                               <Link href={`#${subSection.id}`}>
                                 <a
-                                  {...cC0o(isActive(subSection), 'text-sky-500',
+                                  {...c0(isActive(subSection), 'text-sky-500',
                                     'hover:text-slate-600 dark:hover:text-slate-300')}
                                 >
                                   {subSection.title}
                                 </a>
                               </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </li>
-                  ))}
+                            </li>))}
+                        </ul>)}
+                    </li>))}
                 </ul>
-              </>
-            )}
+              </>)}
           </nav>
         </div>
       </div>
@@ -220,7 +230,7 @@ function useTableOfContents(tableOfContents: ITableOfContentsEl[]) {
   const [currentSection, setCurrentSection] = useState(tableOfContents[0]?.id);
 
   const getHeadings = useCallback(() => {
-    function* traverse(node) {
+    function* traverse(node: ITableOfContentsEl | ITableOfContentsEl[]) {
       if (Array.isArray(node)) {
         for (const child of node) {
           yield* traverse(child);

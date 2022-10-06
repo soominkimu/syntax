@@ -7,6 +7,8 @@ import type { AppProps } from 'next/app';
 import 'focus-visible';
 import '@/styles/tailwind.css';
 
+import type { INavigationEl } from '@/models';
+
 const navigation: INavigationEl[] = [
   {
     title: 'Introduction',

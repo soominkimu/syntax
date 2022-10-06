@@ -1,6 +1,7 @@
 /*=============================================================================
  util.ts - general utility functions
 
+ - requires 'types.d.ts' as the ambient type definitions
  - For debugging, attach "border border-pink-400" to the c_base.
  - Regex for the function call and the whole arguments:
     (c[C|L]0?o?)\(\s*([^)]+?)\s*\)
@@ -8,13 +9,6 @@
 
  (C) 2020 SpacetimeQ INC.
 =============================================================================*/
-export type Nullable<T>    = T | null;  // { [P in keyof T]: T[P] | null }  not a built-in
-export type Undefinable<T> = T | undefined;
-export type Maybe<T>       = T | null | undefined;
-export type Ifable = Maybe<boolean | string | number | object>;  // any type reduceable to boolean
-export type string0       = Nullable<string>;
-export type stringU       = Undefinable<string>;
-export type string0U      = Undefinable< Nullable<string> >;
 // ----------------------------------------------------------------------------
 // Error message
 // ----------------------------------------------------------------------------
@@ -31,23 +25,6 @@ export type TError0 = Nullable<IError>;
 // ----------------------------------------------------------------------------
 // React class
 // ----------------------------------------------------------------------------
-/**
- * Allowed className: undefined is just ignored, null is not allowed in the React argument
- */
-export type TClassName = Undefinable<string>;
-/**
- * In case of 'false' or null or undefined, the argument is just ignored.
- * Ex) (i > 0) & 'ml-4' can be string or 'false'
- */
-export type TClassName0 = Maybe<string | false>;
-/**
- * className object used in the React argument
- */
-export interface IClassNameObj { readonly className?: TClassName; };
-/**
- * extended className
- */
-export interface IClassX { readonly classX?: TClassName; };
 
 const DEVELOPMENT_MODE: boolean =
   !process.env.NODE_ENV ||
@@ -75,12 +52,20 @@ export const hideIf = (hide: Ifable) => showIf(!hide);
 // 2. Conditional expressions such as {mobile && 'ml-4'} can be seamlessly added.
 //    (React className string cannot be concatenated with null or false expressions.)
 // 3. Using the Object { className: ... } and the spread operator (...), "className=" can be removed.
+// 4. a && 'text' returns 'undefined' for 'false' when a is falsy depending on the type of a
+//    so the classname should cover not only 'undefined' but also 'false' case
+// -- Naming convention
+// c - className, starts with c
+// l - list ({ className } object)
+// L - list (' ' separated string)
+// c - condition ({ className } object)
+// C - condition (' ' separated string)
 
 type TCondClassF<T = TClassName> = (  // call signature
-  c_base:  TClassName,   // base classname
+  c_base:  TClassName0,  // base classname
   cnd_if:  Ifable,       // if the condition met
-  c_then:  TClassName,   // concatenate
-  c_else?: TClassName    // (optional) otherwise
+  c_then:  TClassName0,  // concatenate
+  c_else?: TClassName0   // (optional) otherwise
 ) => T;
 
 /**
@@ -107,18 +92,20 @@ export const cC: TCondClassF = (   // class with options (if-then-else)
 /**
  * className Conditional object
  */
-export const cCo: TCondClassF<IClassNameObj> = (   // class with options (if-then-else)
+export const cc: TCondClassF<IClassNameObj> = (   // class with options (if-then-else)
   c_base, cnd_if, c_then, c_else
 ) => ({ className: cC(c_base, cnd_if, c_then, c_else) });
+export const cCo = cc;  // deprecated
 
 /**
  * className Conditional 0(no base) object
  */
-export const cC0o = (
+export const c0 = (
   cnd_if:  Ifable,      // if the condition met
   c_then:  TClassName,  // concatenate
   c_else?: TClassName   // (optional) otherwise
 ): IClassNameObj => ({ className: cnd_if ? c_then : c_else });
+export const cC0o = c0;  // deprecated
 
 /**
  * class List
@@ -131,36 +118,38 @@ export const cL = (
 ): TClassName =>
   // clss.push("border border-pink-400");  // DEBUG, remove 'readonly'
   clss.reduce((cum, a) => a // check this add
-    ? cum               // if valid previous (cumulative) string
-      ? cum + ' ' + a   //   concatenate with the delimeter ' '
-      : a               // no valid previous string
-    : cum               // no valid a
+  ? cum               // if valid previous (cumulative) string
+    ? cum + ' ' + a   //   concatenate with the delimeter ' '
+    : a               // no valid previous string
+  : cum               // no valid a
   ) || undefined;       // Only undefined is allowed in nullish expressions in React
 
 /**
  * class List with If (show or hide condition)
  */
-export const cLIf = (
+export const cLc = (
   cnd_show: Ifable,        // only show the block if the condition met
-  ...clss:  TClassName0[]  // rest parameters, list of classNames allowing null or boolean
+  ...clss:  readonly TClassName0[]  // rest parameters, list of classNames allowing null or boolean
 ): TClassName => cL(showIf(cnd_show), ...clss);
+export const cLIf = cLc;  // deprecated
 
 /**
  * class List object: to omit 'className=' using spread attributes
  * className=""
- * {...cLo('m-1', 'text-gray-400', cls)}
+ * {...co('m-1', 'text-gray-400', cls)}
  */
-export const cLo = (
-  ...clss: TClassName0[]
+export const cl = (
+  ...clss: readonly TClassName0[]
 ): IClassNameObj => ({ className: cL(...clss) });
-
+export const cLo = cl;  // deprecated
 /**
  * class List object with If (show or hide condition)
  */
-export const cLoIf = (
+export const clc = (
   cnd_show: Ifable,
-  ...clss:  TClassName0[]
+  ...clss:  readonly TClassName0[]
 ): IClassNameObj => ({ className: cLIf(cnd_show, ...clss) });
+export const cLoIf = clc;  // deprecated
 
 // ----------------------------------------------------------------------------
 /**
@@ -168,13 +157,13 @@ export const cLoIf = (
  * The difference with cL is just the separating space between strings.
  */
 export const cS = (
-  ...lstr: Maybe<string | false>[]  // rest parameters, list of strings allowing null or boolean
+  ...lstr: readonly TClassName0[]  // rest parameters, list of strings allowing null or boolean
 ): stringU =>
   lstr.reduce((cum, a) => a  // check this add
-    ? cum          // if valid previous (cumulative) string
-      ? cum + a    //   concatenate with no delimeter
-      : a          // no valid previous string
-    : cum          // no valid a
+  ? cum          // if valid previous (cumulative) string
+    ? cum + a    //   concatenate with no delimeter
+    : a          // no valid previous string
+  : cum          // no valid a
   ) || undefined;  // Only undefined is allowed in nullish expressions in React
 // ----------------------------------------------------------------------------
 
@@ -184,12 +173,12 @@ export const cS = (
  */
 export const lZ = (n: number) =>
   (n < 10)
-    ? '0' + n
-    : n.toString();  // leading Zero making a two digit number string
+  ? '0' + n
+  : n.toString();  // leading Zero making a two digit number string
 
 // const callifdef = (f, arg) => if (f && typeof f === "function") f(arg);
 
-export const toggleValue = <T = string>(val: T, a: T, b: T): T => (val === a) ? b : a;
+export const toggleValue = <T=string>(val: T, a: T, b: T): T => (val === a) ? b : a;
 
 /**
  * warning format

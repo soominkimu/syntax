@@ -1,5 +1,5 @@
 import { useId } from 'react'
-import { cLo, TClassName } from '@/util/util';
+import { cl, } from '@/util/util';
 
 import { InstallationIcon } from '@/components/icons/InstallationIcon'
 import { LightbulbIcon } from '@/components/icons/LightbulbIcon'
@@ -39,7 +39,7 @@ export function Icon({ color = 'blue', icon, className, ...props }: {
       aria-hidden="true"
       viewBox="0 0 32 32"
       fill="none"
-      {...cLo(className, iconStyles[color])}
+      {...cl(className, iconStyles[color])}
       {...props}
     >
       <IconComponent {...{id, color}} />
@@ -90,18 +90,18 @@ export const Gradient: React.FC<GradientProps> = ({
   )
 }
 
-type ModeComponent = React.FC<PropsWithClassNameChildren<React.SVGProps<SVGGElement>>>;
+type ModeComponent = React.FC<React.PropsWithChildren<React.SVGProps<SVGGElement & TClassName>>>;
 
 export const LightMode: ModeComponent = ({
   className,
   ...props
 }) => {
-  return <g {...cLo('dark:hidden', className)} {...props} />
+  return <g {...cl('dark:hidden', className)} {...props} />
 }
 
 export const DarkMode: ModeComponent = ({
   className,
   ...props
 }) => {
-  return <g {...cLo('hidden dark:inline', className)} {...props} />
+  return <g {...cl('hidden dark:inline', className)} {...props} />
 }
