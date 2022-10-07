@@ -1,5 +1,5 @@
 // @markdoc/markdoc/src/ast/node.ts
-import { Callout } from '@/components/Callout';
+import { Callout }  from '@/components/Callout';
 import { LinkGrid } from '@/components/LinkGrid';
 
 const tags = {
@@ -25,7 +25,7 @@ const tags = {
     render: ({ src, alt = '', caption }) => (
       <figure>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={src} alt={alt} />
+        <img {...{src, alt}} />
         <figcaption>{caption}</figcaption>
       </figure>
     ),
@@ -43,6 +43,6 @@ const tags = {
       href:        { type: String },
     },
   },
-}
+};
 
 export default tags;

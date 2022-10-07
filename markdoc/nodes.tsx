@@ -12,7 +12,7 @@ const nodes = {
         default: 'col',
       },
     },
-    render: (props) => <th {...props} />,
+    render: (props: any) => <th {...props} />,
   },
   fence: {
     render: Fence,

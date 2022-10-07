@@ -1,12 +1,14 @@
 import { useId } from 'react'
 import { cl, } from '@/util/util';
 
-import { InstallationIcon } from '@/components/icons/InstallationIcon'
-import { LightbulbIcon } from '@/components/icons/LightbulbIcon'
-import { PluginsIcon } from '@/components/icons/PluginsIcon'
-import { PresetsIcon } from '@/components/icons/PresetsIcon'
-import { ThemingIcon } from '@/components/icons/ThemingIcon'
-import { WarningIcon } from '@/components/icons/WarningIcon'
+import {
+  InstallationIcon,
+  LightbulbIcon,
+  PluginsIcon,
+  PresetsIcon,
+  ThemingIcon,
+  WarningIcon
+} from '@/components/icons';
 
 const icons = {
   installation: InstallationIcon,
@@ -17,18 +19,17 @@ const icons = {
   warning:      WarningIcon,
 };
 
-type Icons = { [K in keyof typeof icons]: React.ReactNode; };
+export type IconItem = { [K in keyof typeof icons]: React.ReactNode; };
 export type IconColors = 'blue'|'amber';
 
 const iconStyles: { [K in IconColors]: string; } = {
-  blue: '[--icon-foreground:theme(colors.slate.900)] [--icon-background:theme(colors.white)]',
-  amber:
-    '[--icon-foreground:theme(colors.amber.900)] [--icon-background:theme(colors.amber.100)]',
+  blue:  '[--icon-foreground:theme(colors.slate.900)] [--icon-background:theme(colors.white)]',
+  amber: '[--icon-foreground:theme(colors.amber.900)] [--icon-background:theme(colors.amber.100)]',
 };
 
 export function Icon({ color = 'blue', icon, className, ...props }: {
-  color?: IconColors;
-  icon:  keyof Icons;
+  color?:     IconColors;
+  icon:       keyof IconItem;
   className?: TClassName;
 }) {
   let id = useId()
@@ -51,9 +52,7 @@ interface StopInfo {
   stopColor: string;
   offset?:   number;
 };
-type Gradients = {
-  [K in IconColors]: StopInfo[];
-};
+type Gradients = { [K in IconColors]: StopInfo[]; };
 
 const gradients: Gradients = {
   blue: [
@@ -87,21 +86,13 @@ export const Gradient: React.FC<GradientProps> = ({
         <stop key={index} {...st} />
       ))}
     </radialGradient>
-  )
+  );
 }
 
 type ModeComponent = React.FC<React.PropsWithChildren<React.SVGProps<SVGGElement & TClassName>>>;
 
-export const LightMode: ModeComponent = ({
-  className,
-  ...props
-}) => {
-  return <g {...cl('dark:hidden', className)} {...props} />
-}
+export const LightMode: ModeComponent = ({ className, ...props }) =>
+  <g {...cl('dark:hidden', className)} {...props} />;
 
-export const DarkMode: ModeComponent = ({
-  className,
-  ...props
-}) => {
-  return <g {...cl('hidden dark:inline', className)} {...props} />
-}
+export const DarkMode: ModeComponent = ({ className, ...props }) =>
+  <g {...cl('hidden dark:inline', className)} {...props} />;

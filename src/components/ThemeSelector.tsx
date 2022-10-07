@@ -1,22 +1,25 @@
 import { useEffect, useState } from 'react'
 import { Listbox } from '@headlessui/react'
-import clsx from 'clsx';
+import { cl, cL, cc, } from '@/util/util';
 
 const themes = [
-  { name: 'Light', value: 'light', icon: LightIcon },
-  { name: 'Dark', value: 'dark', icon: DarkIcon },
+  { name: 'Light',  value: 'light',  icon: LightIcon },
+  { name: 'Dark',   value: 'dark',   icon: DarkIcon },
   { name: 'System', value: 'system', icon: SystemIcon },
-]
+];
+type TWTheme = typeof themes[number];  // Tailwind Theme
 
-function IconBase({ children, ...props }) {
+interface IconProps extends React.SVGAttributes<SVGElement> {};
+
+const IconBase: React.FC<React.PropsWithChildren<IconProps>> = ({ children, ...props }) => {
   return (
     <svg aria-hidden="true" viewBox="0 0 16 16" {...props}>
       {children}
     </svg>
-  )
+  );
 }
 
-function LightIcon(props) {
+function LightIcon(props: IconProps) {
   return (
     <IconBase {...props}>
       <path
@@ -28,7 +31,7 @@ function LightIcon(props) {
   )
 }
 
-function DarkIcon(props) {
+function DarkIcon(props: IconProps) {
   return (
     <IconBase {...props}>
       <path
@@ -40,7 +43,7 @@ function DarkIcon(props) {
   )
 }
 
-function SystemIcon(props) {
+function SystemIcon(props: IconProps) {
   return (
     <IconBase {...props}>
       <path
@@ -52,21 +55,25 @@ function SystemIcon(props) {
   )
 }
 
-export function ThemeSelector(props) {
-  let [selectedTheme, setSelectedTheme] = useState()
+/**
+ * pages/_document.tsx
+ */
+export function ThemeSelector(props: React.ComponentProps<any>) {
+  const [selectedTheme, setSelectedTheme] = useState<TWTheme>()
+  const twSz = 'h-4 w-4';  // tailwind icon size
+  const twHd = 'hidden';
 
   useEffect(() => {
     if (selectedTheme) {
-      document.documentElement.setAttribute('data-theme', selectedTheme.value)
+      document.documentElement.setAttribute('data-theme', selectedTheme.value);
     } else {
       setSelectedTheme(
         themes.find(
-          (theme) =>
-            theme.value === document.documentElement.getAttribute('data-theme')
+          (theme) => theme.value === document.documentElement.getAttribute('data-theme')
         )
-      )
+      );
     }
-  }, [selectedTheme])
+  }, [selectedTheme]);
 
   return (
     <Listbox
@@ -76,38 +83,41 @@ export function ThemeSelector(props) {
       {...props}
     >
       <Listbox.Label className="sr-only">Theme</Listbox.Label>
-      <Listbox.Button className="flex items-center justify-center w-6 h-6 rounded-lg shadow-md shadow-black/5 ring-1 ring-black/5 dark:bg-slate-700 dark:ring-inset dark:ring-white/5">
+      <Listbox.Button
+        {...cl("flex items-center justify-center w-6 h-6 rounded-lg shadow-md shadow-black/5",
+          "ring-1 ring-black/5 dark:bg-slate-700 dark:ring-inset dark:ring-white/5")}
+      >
         <span className="sr-only">{selectedTheme?.name}</span>
-        <LightIcon className="hidden h-4 w-4 fill-sky-400 [[data-theme=light]_&]:block" />
-        <DarkIcon className="hidden h-4 w-4 fill-sky-400 [[data-theme=dark]_&]:block" />
-        <LightIcon className="hidden h-4 w-4 fill-slate-400 [:not(.dark)[data-theme=system]_&]:block" />
-        <DarkIcon className="hidden h-4 w-4 fill-slate-400 [.dark[data-theme=system]_&]:block" />
+        <LightIcon {...cl(twHd, twSz, "fill-sky-400 [[data-theme=light]_&]:block")} />
+        <DarkIcon  {...cl(twHd, twSz, "fill-sky-400 [[data-theme=dark]_&]:block")} />
+        <LightIcon {...cl(twHd, twSz, "fill-slate-400 [:not(.dark)[data-theme=system]_&]:block")} />
+        <DarkIcon  {...cl(twHd, twSz, "fill-slate-400 [.dark[data-theme=system]_&]:block")} />
       </Listbox.Button>
-      <Listbox.Options className="absolute p-3 mt-3 text-sm font-medium bg-white shadow-md top-full left-1/2 w-36 -translate-x-1/2 space-y-1 rounded-xl shadow-black/5 ring-1 ring-black/5 dark:bg-slate-800 dark:ring-white/5">
+      <Listbox.Options
+        {...cl("absolute p-3 mt-3 text-sm font-medium bg-white shadow-md top-full left-1/2 w-36",
+          "-translate-x-1/2 space-y-1 rounded-xl shadow-black/5 ring-1 ring-black/5",
+          "dark:bg-slate-800 dark:ring-white/5")}
+      >
         {themes.map((theme) => (
           <Listbox.Option
             key={theme.value}
             value={theme}
             className={({ active, selected }) =>
-              clsx(
-                'flex cursor-pointer select-none items-center rounded-[0.625rem] p-1',
-                {
-                  'text-sky-500': selected,
-                  'text-slate-900 dark:text-white': active && !selected,
-                  'text-slate-700 dark:text-slate-400': !active && !selected,
-                  'bg-slate-100 dark:bg-slate-900/40': active,
-                }
-              )
-            }
+              cL('flex cursor-pointer select-none items-center rounded-[0.625rem] p-1',
+                selected
+                ? 'text-sky-500'
+                : active
+                  ? 'text-slate-900 dark:text-white'
+                  : 'text-slate-700 dark:text-slate-400',
+                active && 'bg-slate-100 dark:bg-slate-900/40')}
           >
             {({ selected }) => (
               <>
-                <div className="p-1 bg-white shadow rounded-md ring-1 ring-slate-900/5 dark:bg-slate-700 dark:ring-inset dark:ring-white/5">
+                <div {...cl("p-1 bg-white shadow rounded-md ring-1 ring-slate-900/5",
+                  "dark:bg-slate-700 dark:ring-inset dark:ring-white/5")}
+                >
                   <theme.icon
-                    className={clsx('h-4 w-4', {
-                      'fill-sky-400 dark:fill-sky-400': selected,
-                      'fill-slate-400': !selected,
-                    })}
+                    {...cc(twSz, selected, 'fill-sky-400 dark:fill-sky-400', 'fill-slate-400')}
                   />
                 </div>
                 <div className="ml-3">{theme.name}</div>

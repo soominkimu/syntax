@@ -2,7 +2,7 @@ import { cl, } from '@/util/util';
 import { DebugText } from '@/util/util-react';
 
 export function Prose({ as: Component = 'div', className, children }: {
-  as?: React.ElementType;
+  as?:        React.ElementType;
   className?: TClassName;
   children:   React.ReactNode;
 }) {

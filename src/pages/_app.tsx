@@ -94,8 +94,7 @@ function collectHeadings(nodes: any, slugify = slugifyWithCounter()) {
 export default function App({ Component, pageProps }: AppProps) {
   const title = pageProps.markdoc?.frontmatter.title;
 
-  const pageTitle =
-    pageProps.markdoc?.frontmatter.pageTitle || `${title} - Docs`;
+  const pageTitle = pageProps.markdoc?.frontmatter.pageTitle || `${title} - Docs`;
 
   const description = pageProps.markdoc?.frontmatter.description;
 
@@ -113,5 +112,5 @@ export default function App({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
       </Layout>
     </>
-  )
+  );
 }

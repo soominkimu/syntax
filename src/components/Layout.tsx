@@ -1,3 +1,8 @@
+/*=============================================================================
+ Layout.tsx - 
+
+ (C) 2022 SpacetimeQ INC
+=============================================================================*/
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -13,14 +18,13 @@ import { ThemeSelector } from '@/components/ThemeSelector'
 import type { Node } from '@markdoc/markdoc';
 import type { INavigationEl } from '@/models';
 
-import { cL, cc, c0, } from '@/util/util';
+import { cl, cL, cc, c0, } from '@/util/util';
 import { DebugText } from '@/util/util-react';
 
-// interface ITableOfContentsEl extends Node { };
-interface ITableOfContentsEl {
+interface IToCNode {  // Table of Contents Element
   id:       string;
   title:    string;
-  children: ITableOfContentsEl[];
+  children: IToCNode[];  // recursive
 };
 
 function Header({ navigation }) {
@@ -86,21 +90,21 @@ export function Layout({ children, title, navigation, tableOfContents }: {
   children:        React.ReactNode;
   title:           string;
   navigation:      INavigationEl[];
-  tableOfContents: ITableOfContentsEl[];
+  tableOfContents: IToCNode[];
 }) {
   const router = useRouter();
   const isHomePage = router.pathname === '/';
   const allLinks = navigation.flatMap((section) => section.links);
   const linkIndex = allLinks.findIndex((link) => link.href === router.pathname);
-  const previousPage = allLinks[linkIndex - 1];
+  const prevPage = allLinks[linkIndex - 1];
   const nextPage = allLinks[linkIndex + 1];
   const section = navigation.find((section) =>
     section.links.find((link) => link.href === router.pathname)
   );
-  const currentSection = useTableOfContents(tableOfContents);
-  console.dir(tableOfContents);
+  const currentSection = useToC(tableOfContents);
+  // console.dir(tableOfContents);
 
-  function isActive(section: ITableOfContentsEl) {
+  function isActive(section: IToCNode) {
     if (section.id === currentSection) {
       return true;
     }
@@ -116,20 +120,23 @@ export function Layout({ children, title, navigation, tableOfContents }: {
 
       {isHomePage && <Hero />}
 
-      <div className="relative flex justify-center mx-auto max-w-8xl sm:px-2 lg:px-8 xl:px-12">
-        <div className="hidden lg:relative lg:block lg:flex-none">
+      <div {...cl("relative flex justify-center mx-auto max-w-8xl sm:px-2 lg:px-8 xl:px-12")}>
+        <div {...cl("hidden lg:relative lg:block lg:flex-none")}>
           <DebugText>Layout.tsx</DebugText>
-          <div className="absolute inset-y-0 right-0 w-[50vw] bg-slate-50 dark:hidden" />
-          <div className="sticky top-[4.5rem] -ml-0.5 h-[calc(100vh-4.5rem)] overflow-y-auto py-16 pl-0.5">
-            <div className="absolute bottom-0 right-0 hidden w-px h-12 top-16 bg-gradient-to-t from-slate-800 dark:block" />
-            <div className="absolute bottom-0 right-0 hidden w-px top-28 bg-slate-800 dark:block" />
-            <Navigation
-              {...{navigation}}
-              className="w-64 pr-8 xl:w-72 xl:pr-16"
+          <div {...cl("absolute inset-y-0 right-0 w-[50vw] bg-slate-50 dark:hidden")} />
+          <div {...cl("sticky top-[4.5rem] -ml-0.5 h-[calc(100vh-4.5rem)]",
+            "overflow-y-auto py-16 pl-0.5")}
+          >
+            <div {...cl("absolute bottom-0 right-0 hidden w-px h-12 top-16 bg-gradient-to-t",
+              "from-slate-800 dark:block")}
             />
+            <div {...cl("absolute bottom-0 right-0 hidden w-px top-28 bg-slate-800 dark:block")} />
+            <Navigation {...{navigation}} {...cl("w-64 pr-8 xl:w-72 xl:pr-16")} />
           </div>
         </div>
-        <div className="flex-auto max-w-2xl min-w-0 px-4 py-16 lg:max-w-none lg:pr-0 lg:pl-8 xl:px-16">
+        <div {...cl("flex-auto max-w-2xl min-w-0 px-4 py-16 lg:max-w-none lg:pr-0 lg:pl-8",
+          "xl:px-16")}
+        >
           <article>
             {(title || section) && (
               <header className="mb-9 space-y-1">
@@ -139,7 +146,9 @@ export function Layout({ children, title, navigation, tableOfContents }: {
                   </p>
                 )}
                 {title && (
-                  <h1 className="text-3xl tracking-tight font-display text-slate-900 dark:text-white">
+                  <h1 {...cl("text-3xl tracking-tight font-display text-slate-900",
+                    "dark:text-white")}
+                  >
                     {title}
                   </h1>
                 )}
@@ -148,15 +157,17 @@ export function Layout({ children, title, navigation, tableOfContents }: {
             <Prose>{children}</Prose>
           </article>
           <dl className="flex pt-6 mt-12 border-t border-slate-200 dark:border-slate-800">
-            {previousPage && (
+            {prevPage && (
               <div>
                 <dt className="text-sm font-medium font-display text-slate-900 dark:text-white">
                   Previous
                 </dt>
                 <dd className="mt-1">
-                  <Link href={previousPage.href}>
-                    <a className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300">
-                      &larr; {previousPage.title}
+                  <Link href={prevPage.href}>
+                    <a {...cl("text-base font-semibold text-slate-500 hover:text-slate-600",
+                      "dark:text-slate-400 dark:hover:text-slate-300")}
+                    >
+                      &larr; {prevPage.title}
                     </a>
                   </Link>
                 </dd>
@@ -169,7 +180,9 @@ export function Layout({ children, title, navigation, tableOfContents }: {
                 </dt>
                 <dd className="mt-1">
                   <Link href={nextPage.href}>
-                    <a className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300">
+                    <a {...cl("text-base font-semibold text-slate-500 hover:text-slate-600",
+                      "dark:text-slate-400 dark:hover:text-slate-300")}
+                    >
                       {nextPage.title} &rarr;
                     </a>
                   </Link>
@@ -178,13 +191,15 @@ export function Layout({ children, title, navigation, tableOfContents }: {
             )}
           </dl>
         </div>
-        <div className="hidden xl:sticky xl:top-[4.5rem] xl:-mr-6 xl:block xl:h-[calc(100vh-4.5rem)] xl:flex-none xl:overflow-y-auto xl:py-16 xl:pr-6">
+        <div {...cl("hidden xl:sticky xl:top-[4.5rem] xl:-mr-6 xl:block",
+          "xl:h-[calc(100vh-4.5rem)] xl:flex-none xl:overflow-y-auto xl:py-16 xl:pr-6")}
+        >
           <nav aria-labelledby="on-this-page-title" className="w-56">
             {tableOfContents.length > 0 && (
               <>
                 <h2
                   id="on-this-page-title"
-                  className="text-sm font-medium font-display text-slate-900 dark:text-white"
+                  {...cl("text-sm font-medium font-display text-slate-900 dark:text-white")}
                 >
                   On this page
                 </h2>
@@ -226,14 +241,23 @@ export function Layout({ children, title, navigation, tableOfContents }: {
   )
 }
 
-function useTableOfContents(tableOfContents: ITableOfContentsEl[]) {
-  const [currentSection, setCurrentSection] = useState(tableOfContents[0]?.id);
+/**
+ * Table Of Contents
+ */
+function useToC(tocs: IToCNode[]) {
+  const [currentSection, setCurrentSection] = useState(tocs[0]?.id);
 
-  const getHeadings = useCallback(() => {
-    function* traverse(node: ITableOfContentsEl | ITableOfContentsEl[]) {
-      if (Array.isArray(node)) {
-        for (const child of node) {
-          yield* traverse(child);
+  interface IHeading {
+    id:  IToCNode['id'];
+    top: typeof window.scrollY;
+  };
+
+  const getHeadings = useCallback(() => {  // build top position list of each ToC node
+    // generator: values to be iterated are the result of a computation
+    function* traverse(node: IToCNode | IToCNode[]) {
+      if (Array.isArray(node)) {     // array of node
+        for (const child of node) {  // iterate each node
+          yield* traverse(child);    // recursively
         }
       } else {
         const el = document.getElementById(node.id);
@@ -250,23 +274,20 @@ function useTableOfContents(tableOfContents: ITableOfContentsEl[]) {
         }
       }
     }
-
-    return Array.from(traverse(tableOfContents));
-  }, [tableOfContents]);
+    return Array.from(traverse(tocs));
+  }, [tocs]);
 
   useEffect(() => {
-    const headings = getHeadings() as { id: string; top: number; }[];
-    if (tableOfContents.length === 0 || headings.length === 0) return;
+    const headings = getHeadings() as IHeading[];
+    if (tocs.length === 0 || headings.length === 0) return;
     function onScroll() {
       const sortedHeadings = headings!.concat([]).sort((a, b) => a.top - b.top);
 
-      const top = window.pageYOffset;
+      const top = window.pageYOffset;  // alias for scrollY
       let current = sortedHeadings[0].id;
-      for (let i = 0; i < sortedHeadings.length; i++) {
-        if (top >= sortedHeadings[i].top) {
-          current = sortedHeadings[i].id;
-        }
-      }
+      for (const sH of sortedHeadings)
+        if (top >= sH.top)
+          current = sH.id;
       setCurrentSection(current);
     }
     const eventOption = {
@@ -278,7 +299,7 @@ function useTableOfContents(tableOfContents: ITableOfContentsEl[]) {
     return () => {
       window.removeEventListener('scroll', onScroll, eventOption);
     }
-  }, [getHeadings, tableOfContents]);
+  }, [getHeadings, tocs]);
 
   return currentSection;
 }

@@ -21,8 +21,7 @@ export const Fence: React.FC<React.PropsWithChildren<{
             {tokens.map((line, index) => (
               <Fragment key={index}>
                 {line.map((token, index) => (
-                  <span key={index} {...getTokenProps({ token })} />
-                ))}
+                  <span key={index} {...getTokenProps({ token })} />))}
                 {'\n'}
               </Fragment>
             ))}
